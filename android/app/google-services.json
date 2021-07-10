@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "428587549180",
+    "project_id": "vidcure-25d8a",
+    "storage_bucket": "vidcure-25d8a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:428587549180:android:d6317baeb6f6f97cd3f279",
+        "android_client_info": {
+          "package_name": "com.bandughana.vidcure"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "428587549180-o92c8agdr25ick1qr2np6i47072mji9d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bandughana.vidcure",
+            "certificate_hash": "b1c11a75dd2eef2ca193bbb43d4a356b7be8e111"
+          }
+        },
+        {
+          "client_id": "428587549180-tk87on7o196vacgob1eh9p7q69ahlm7u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8BN2pZmElOae6qkPADQoFGb5fFofgbIU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "428587549180-tk87on7o196vacgob1eh9p7q69ahlm7u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
