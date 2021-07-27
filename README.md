@@ -1,7 +1,7 @@
 # VidCure
 
 A video conference and patient-doctor chat app developed with Flutter, Agora SDK and FirebaseFirestore.
-
+![Home page](flutter_01.png)
 ## Running the app
 
 To run the app, first of all you'll need Flutter v2.2.1+ and Android Studio 4.0+.
