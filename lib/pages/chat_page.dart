@@ -8,8 +8,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:dash_chat/dash_chat.dart';
+import 'package:vidcure/models/Expert.dart';
+import 'package:vidcure/models/User.dart' as mUser;
 
 class ChatPage extends StatefulWidget {
+  final Expert? expert;
+
+  final mUser.User? user;
+
+  const ChatPage({Key? key, this.expert, this.user}) : super(key: key);
   @override
   _ChatPageState createState() => _ChatPageState();
 }
@@ -22,8 +29,17 @@ class _ChatPageState extends State<ChatPage> {
 
   var i = 0;
 
+  String? userDoctorRoom;
+  String? title;
+
   @override
   void initState() {
+    userDoctorRoom = widget.expert != null
+        ? '${widget.expert!.email}_${fUser!.email}'
+        : '${fUser!.email}_${widget.user!.email}';
+    title = widget.expert != null
+        ? 'Dr. ${widget.expert!.name.split(" ").first}'
+        : widget.user!.fullName;
     super.initState();
   }
 
@@ -48,24 +64,11 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void onSend(ChatMessage message) {
-    print(message.toJson());
     FirebaseFirestore.instance
+        .collection('chats')
+        .doc(userDoctorRoom)
         .collection('messages')
-        .doc(DateTime.now().millisecondsSinceEpoch.toString())
-        .set(message.toJson());
-    /* setState(() {
-      messages = [...messages, message];
-      print(messages.length);
-    });
-
-    if (i == 0) {
-      systemMessage();
-      Timer(Duration(milliseconds: 600), () {
-        systemMessage();
-      });
-    } else {
-      systemMessage();
-    } */
+        .add(message.toJson());
   }
 
   @override
@@ -74,10 +77,12 @@ class _ChatPageState extends State<ChatPage> {
         uid: fUser!.uid, name: fUser!.displayName, avatar: fUser!.photoURL);
     return Scaffold(
       appBar: AppBar(
-        title: Text("Chat with a Dr."),
+        title: Text("Chat with $title"),
       ),
       body: StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance
+              .collection('chats')
+              .doc(userDoctorRoom)
               .collection('messages')
               .orderBy("createdAt")
               .snapshots(),
@@ -124,7 +129,7 @@ class _ChatPageState extends State<ChatPage> {
                 alwaysShowSend: true,
                 inputTextStyle: TextStyle(fontSize: 16.0),
                 inputContainerStyle: BoxDecoration(
-                  border: Border.all(width: 0.0),
+                  border: Border.all(width: 2.0),
                   color: Colors.white,
                 ),
                 onQuickReply: (Reply reply) {
@@ -190,6 +195,8 @@ class _ChatPageState extends State<ChatPage> {
                             ChatMessage(text: "", user: user, image: url);
 
                         FirebaseFirestore.instance
+                            .collection('chats')
+                            .doc(userDoctorRoom)
                             .collection('messages')
                             .add(message.toJson());
                       }

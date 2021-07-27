@@ -1,9 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:vidcure/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:vidcure/pages/home_page.dart';
-
 
 class Authentication extends StatefulWidget {
   Authentication({Key? key}) : super(key: key);
@@ -25,6 +24,7 @@ class _AuthenticationState extends State<Authentication> {
       }
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,7 +77,7 @@ class _AuthenticationState extends State<Authentication> {
 
     // Obtain the auth details from the request
     final GoogleSignInAuthentication googleAuth =
-    await googleUser!.authentication;
+        await googleUser!.authentication;
 
     // Create a new credential
     final OAuthCredential credential = GoogleAuthProvider.credential(
@@ -87,12 +87,30 @@ class _AuthenticationState extends State<Authentication> {
 
     // Once signed in, return the UserCredential
     UserCredential userCredential =
-    await FirebaseAuth.instance.signInWithCredential(credential);
+        await FirebaseAuth.instance.signInWithCredential(credential);
+
+    createUserInFirebase(userCredential.user!);
     setState(() {
       _isProgress = false;
     });
     Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => HomePage()));
     return userCredential;
+  }
+
+  createUserInFirebase(User user) async {
+    final QuerySnapshot result = await FirebaseFirestore.instance
+        .collection('users')
+        .where('id', isEqualTo: user.uid)
+        .get();
+
+    if (result.docs.length == 0) {
+      FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+        'fullName': user.displayName,
+        'email': user.email,
+        'profilePhoto': user.photoURL ?? "https://i.pravatar.cc/300",
+        'isOnline': false
+      });
+    }
   }
 }
